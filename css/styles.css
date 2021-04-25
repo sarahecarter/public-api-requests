@@ -3,6 +3,7 @@
 ======================================== */
 
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
 
 * {
 	box-sizing: border-box;
@@ -14,7 +15,7 @@ html, body {
 }
 
 body {
-    font-family: "Nunito", sans-serif;
+    font-family: 'Poppins', sans-serif;
     text-align: center;
     background: rgb(117,162,215);
     background: linear-gradient(180deg, rgba(117,162,215,1) 0%, rgba(255,255,255,1) 100%);

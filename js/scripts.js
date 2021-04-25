@@ -1,6 +1,8 @@
 //variables
 const url = 'https://randomuser.me/api/?results=12&nat=us&inc=name,location,email,dob,phone,picture&noinfo';
 let gallery = document.getElementById('gallery');
+
+
 //initialize array to store employee data
 let employees = [];
 
@@ -40,15 +42,23 @@ function displayEmployees(employeeData) {
     });
 
     //add directoryHTML into the gallery
-    gallery.innerHTML = directoryHTML;
+    gallery.insertAdjacentHTML('beforeend', directoryHTML);
 
 
 }
+
 //create modal 
 //takes index number of employee in array and displays that info
 function displayModal(employeeIndexNumber) {
     //get that employee
     let employee = employees[employeeIndexNumber];
+
+    //create date
+    let date = new Date(employee.dob.date);
+
+    //for formatting phone number
+    let phoneNumber = formatPhone(employee.phone);
+
     //initialize modal HTML 
     let modalHTML = `
     
@@ -61,9 +71,9 @@ function displayModal(employeeIndexNumber) {
                 <p class="modal-text">${employee.email}</p>
                 <p class="modal-text cap">${employee.location.city}</p>
                 <hr>
-                <p class="modal-text">${employee.phone}</p>
-                <p class="modal-text">${employee.location.street}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}</p>
-                <p class="modal-text">Birthday: ${employee.dob.date}</p>
+                <p class="modal-text">${phoneNumber}</p>
+                <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}</p>
+                <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
             </div>
         </div>
 
@@ -75,9 +85,26 @@ function displayModal(employeeIndexNumber) {
     `;
 
     //append HTML to the page
-    gallery.insertAdjacentHTML('afterend', modalHTML);
+    gallery.insertAdjacentHTML('beforeend', modalHTML);
+
+    //event listener to close modal
+    let modalClose = document.getElementById('modal-close-btn');
+    let modal = document.querySelector('.modal-container');
+    modalClose.addEventListener('click', () => {
+        modal.remove();
+    })
 }
 
+//format phone number
+function formatPhone(phoneNumber) {
+   //take phone number an replace () and - 
+   let unformatted = phoneNumber.replace(/\D/g, '');
+   //reformat phone number
+   let formatted = '(' + unformatted.substring(0,3) + ') ' + unformatted.substring(3,6) + '-' + unformatted.substring(6,10);
+   return formatted;
+}
+
+//listen for clicks on cards and display modal
 gallery.addEventListener('click', (e) => {
     if (e.target.closest(".card")) {
         let card = e.target.closest(".card");
@@ -88,4 +115,6 @@ gallery.addEventListener('click', (e) => {
 })
 
 
-//display modal on click
+
+
+
