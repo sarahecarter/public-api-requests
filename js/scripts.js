@@ -59,7 +59,7 @@ function displayModal(employeeIndexNumber) {
     //for formatting phone number
     let phoneNumber = formatPhone(employee.phone);
 
-    //initialize modal HTML 
+    //create modal HTML 
     let modalHTML = `
     
     <div class="modal-container">
@@ -84,7 +84,7 @@ function displayModal(employeeIndexNumber) {
     </div>
     `;
 
-    //append HTML to the page
+    //append modal HTML to the page
     gallery.insertAdjacentHTML('beforeend', modalHTML);
 
     //event listener to close modal
@@ -115,6 +115,17 @@ gallery.addEventListener('click', (e) => {
 })
 
 
+
+//Search functionality
+let searchContainer = document.querySelector('.search-container');
+let searchInput = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+    `;
+
+searchContainer.insertAdjacentHTML('beforeend', searchInput);
 
 
 
