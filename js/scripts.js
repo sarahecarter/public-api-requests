@@ -63,7 +63,7 @@ function displayModal(employeeIndexNumber) {
     let modalHTML = `
     
     <div class="modal-container">
-        <div class="modal">
+        <div class="modal" data-index="${employeeIndexNumber}">
             <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
             <div class="modal-info-container">
                 <img class="modal-img" src="${employee.picture.large}" alt="profile picture">
@@ -93,6 +93,17 @@ function displayModal(employeeIndexNumber) {
     modalClose.addEventListener('click', () => {
         modal.remove();
     })
+
+    //Switching between cards
+    let nextButton = document.getElementById('modal-next');
+    let prevButton = document.getElementById('modal-prev');
+
+    nextButton.addEventListener('click', () => {
+        let card = nextButton.parentElement.previousElementSibling;
+        let cardIndex = card.getAttribute('data-index');
+        
+    })
+
 }
 
 //format phone number
@@ -118,14 +129,32 @@ gallery.addEventListener('click', (e) => {
 
 //Search functionality
 let searchContainer = document.querySelector('.search-container');
-let searchInput = `
+let searchHTML = `
     <form action="#" method="get">
         <input type="search" id="search-input" class="search-input" placeholder="Search...">
         <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>
     `;
 
-searchContainer.insertAdjacentHTML('beforeend', searchInput);
+searchContainer.insertAdjacentHTML('beforeend', searchHTML);
 
+let searchInput = document.getElementById('search-input');
+let employeeNames = document.getElementsByClassName('card-name');
+
+
+searchInput.addEventListener('keyup', searchFilter);
+
+function searchFilter () {
+    let searchValue = searchInput.value.toLowerCase();
+    [...employeeNames].forEach(employeeName => {
+        let name = employeeName.textContent.toLowerCase();
+        let card = employeeName.parentElement.parentElement;
+        if (name.includes(searchValue)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
 
 
