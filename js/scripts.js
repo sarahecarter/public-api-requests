@@ -1,13 +1,12 @@
-//variables
+//Variables
 const url = 'https://randomuser.me/api/?results=12&nat=us&inc=name,location,email,dob,phone,picture&noinfo';
 let gallery = document.getElementById('gallery');
 
-
-//initialize array to store employee data
+//Initialize array to store employee data
 let employees = [];
 
 
-//fetch data from api
+//Fetch data from api
 fetch(url) 
     .then(res => res.json())
     .then(res => res.results)
@@ -15,7 +14,7 @@ fetch(url)
     .catch(err => console.log(err));
 
 
-//create cards using displayEmployees function
+//Create cards using displayEmployees function
 function displayEmployees(employeeData) {
     //add employee data to employees array
     employees = employeeData;
@@ -26,7 +25,7 @@ function displayEmployees(employeeData) {
     //loop through employee data and create a card for each
     employees.forEach((employee, index) => {
         
-        //create card for each employee
+        //card HTML
         directoryHTML += `
         <div class="card" data-index="${index}">
             <div class="card-img-container">
@@ -47,13 +46,14 @@ function displayEmployees(employeeData) {
 
 }
 
-//create modal 
-//takes index number of employee in array and displays that info
+
+
+//Create modal based on employee index using displayModal function
 function displayModal(employeeIndexNumber) {
-    //get that employee
+    //get the employee data and store in employee variable
     let employee = employees[employeeIndexNumber];
 
-    //create date
+    //format birthday 
     let date = new Date(employee.dob.date);
 
     //for formatting phone number
@@ -73,7 +73,7 @@ function displayModal(employeeIndexNumber) {
                 <hr>
                 <p class="modal-text">${phoneNumber}</p>
                 <p class="modal-text">${employee.location.street.number} ${employee.location.street.name}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}</p>
-                <p class="modal-text">Birthday: ${date.getMonth()}/${date.getDate()}/${date.getFullYear()}</p>
+                <p class="modal-text">Birthday: ${date.getMonth() +1}/${date.getDate()}/${date.getFullYear()}</p>
             </div>
         </div>
 
@@ -94,19 +94,68 @@ function displayModal(employeeIndexNumber) {
         modal.remove();
     })
 
-    //Switching between cards
+    //variables for switching between cards
     let nextButton = document.getElementById('modal-next');
     let prevButton = document.getElementById('modal-prev');
+    
 
+    //event listener to switch to next employee
     nextButton.addEventListener('click', () => {
-        let card = nextButton.parentElement.previousElementSibling;
-        let cardIndex = card.getAttribute('data-index');
-        
+        //need to remove current modal before adding new one
+        modal.remove();
+        nextCard(employeeIndexNumber);
+    })
+
+    //event listener to switch to previous employee
+    prevButton.addEventListener('click', () => {
+        modal.remove();
+        previousCard(employeeIndexNumber);
     })
 
 }
 
-//format phone number
+//Next card function
+function nextCard(index) {
+    //check to make sure it is not the last card
+    if (index < 11) {
+        //add to index number
+        index++;
+        //display new modal
+        displayModal(index); 
+    } 
+    //if last card is being displayed don't switch card
+    else if (index === 11) {
+        displayModal(index);
+    }
+
+}
+
+//Previous card function
+function previousCard(index) {
+    //if first card is being displayed don't switch card
+    if (index === 0) {
+        displayModal(index);
+    }
+    //check to make sure it is not the first card
+    else if (index > 0) {
+        //add to index number
+        index--;
+        //display new modal
+        displayModal(index); 
+    } 
+    
+}
+
+//Listen for clicks on cards and display corresponding modal
+gallery.addEventListener('click', (e) => {
+    if (e.target.closest(".card")) {
+        let card = e.target.closest(".card");
+        let cardIndex = card.getAttribute('data-index');
+        displayModal(cardIndex);
+    }
+})
+
+//Format phone number helper function
 function formatPhone(phoneNumber) {
    //take phone number an replace () and - 
    let unformatted = phoneNumber.replace(/\D/g, '');
@@ -115,20 +164,10 @@ function formatPhone(phoneNumber) {
    return formatted;
 }
 
-//listen for clicks on cards and display modal
-gallery.addEventListener('click', (e) => {
-    if (e.target.closest(".card")) {
-        let card = e.target.closest(".card");
-        let cardIndex = card.getAttribute('data-index');
-        //displayModal function
-        displayModal(cardIndex);
-    }
-})
-
-
 
 //Search functionality
 let searchContainer = document.querySelector('.search-container');
+//create search input
 let searchHTML = `
     <form action="#" method="get">
         <input type="search" id="search-input" class="search-input" placeholder="Search...">
@@ -136,22 +175,29 @@ let searchHTML = `
     </form>
     `;
 
+//Append search input 
 searchContainer.insertAdjacentHTML('beforeend', searchHTML);
 
 let searchInput = document.getElementById('search-input');
 let employeeNames = document.getElementsByClassName('card-name');
 
-
+//Add event listener to search input
 searchInput.addEventListener('keyup', searchFilter);
 
+//Search function
 function searchFilter () {
+    //store value from search input and convert to lowercase
     let searchValue = searchInput.value.toLowerCase();
+    //loop through employee names
     [...employeeNames].forEach(employeeName => {
         let name = employeeName.textContent.toLowerCase();
         let card = employeeName.parentElement.parentElement;
+        //if name includes search input value display card
         if (name.includes(searchValue)) {
             card.style.display = 'flex';
-        } else {
+        } 
+        //if search input doesn't match name hide the card
+        else {
             card.style.display = 'none';
         }
     });
