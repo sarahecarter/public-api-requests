@@ -43,7 +43,6 @@ function displayEmployees(employeeData) {
     //add directoryHTML into the gallery
     gallery.insertAdjacentHTML('beforeend', directoryHTML);
 
-
 }
 
 
@@ -98,6 +97,14 @@ function displayModal(employeeIndexNumber) {
     let nextButton = document.getElementById('modal-next');
     let prevButton = document.getElementById('modal-prev');
     
+    //hide previous button from first card and next button from last card
+    if (employeeIndexNumber < 1) {
+        prevButton.style.display = 'none';
+    }
+
+    if (employeeIndexNumber > 10) {
+        nextButton.style.display = 'none';
+    }
 
     //event listener to switch to next employee
     nextButton.addEventListener('click', () => {
@@ -116,34 +123,18 @@ function displayModal(employeeIndexNumber) {
 
 //Next card function
 function nextCard(index) {
-    //check to make sure it is not the last card
-    if (index < 11) {
-        //add to index number
-        index++;
-        //display new modal
-        displayModal(index); 
-    } 
-    //if last card is being displayed don't switch card
-    else if (index === 11) {
-        displayModal(index);
-    }
-
+    //add to index number
+    index++;
+    //display new modal
+    displayModal(index); 
 }
 
 //Previous card function
 function previousCard(index) {
-    //if first card is being displayed don't switch card
-    if (index === 0) {
-        displayModal(index);
-    }
-    //check to make sure it is not the first card
-    else if (index > 0) {
-        //add to index number
-        index--;
-        //display new modal
-        displayModal(index); 
-    } 
-    
+    //subtract from index number
+    index--;
+    //display new modal
+    displayModal(index); 
 }
 
 //Listen for clicks on cards and display corresponding modal
@@ -167,7 +158,7 @@ function formatPhone(phoneNumber) {
 
 //Search functionality
 let searchContainer = document.querySelector('.search-container');
-//create search input
+//create search input HTML
 let searchHTML = `
     <form action="#" method="get">
         <input type="search" id="search-input" class="search-input" placeholder="Search...">
